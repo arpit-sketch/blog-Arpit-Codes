@@ -68,7 +68,7 @@ const BLOG_POSTS = [
   excerpt: "AI models are only as useful as the context they have access to. MCP is the protocol that finally makes giving them that context systematic, safe, and scalable.",
   date: "2026-04-25",
   time: "10:00 AM",
-  tag: "Web Development",
+  tag: "AI & Machine Learning",
   tagColor: "var(--warm-yellow)",
   readTime: "5 min read",
   content: `

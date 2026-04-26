@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Arpit Codes</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* HERO */
+    .about-hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: var(--border);
+      min-height: calc(100vh - 54px);
+    }
+    .hero-left {
+      background: var(--black);
+      color: var(--cream);
+      padding: 5rem 4rem;
+      border-right: var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-left::after {
+      content: 'Hi.';
+      position: absolute;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 18rem;
+      color: rgba(240,192,64,0.04);
+      bottom: -4rem; right: -1rem;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+    .about-name {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 3.8vw, 3.2rem);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+    }
+    .about-name em { font-style: italic; color: var(--warm-yellow); }
+    .about-role {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: rgba(245,237,216,0.4);
+    }
+    .about-bio {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: rgba(245,237,216,0.7);
+      max-width: 380px;
+    }
+    .social-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .social-link {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      text-decoration: none;
+      color: var(--warm-yellow);
+      border: 1.5px solid rgba(240,192,64,0.3);
+      padding: 5px 11px;
+      transition: all 0.1s;
+      cursor: none;
+    }
+    .social-link:hover {
+      background: var(--warm-yellow);
+      color: var(--black);
+      border-color: var(--warm-yellow);
+      box-shadow: 3px 3px 0 rgba(240,192,64,0.25);
+      transform: translate(-1px,-1px);
+    }
+
+    /* RIGHT */
+    .hero-right {
+      background: var(--warm-yellow);
+      padding: 5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2.5rem;
+    }
+    .avatar-row { display: flex; align-items: center; gap: 1.25rem; }
+    .avatar {
+      width: 72px; height: 72px;
+      background: var(--black);
+      border: var(--border);
+      box-shadow: var(--shadow);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.8rem;
+      color: var(--warm-yellow);
+      flex-shrink: 0;
+    }
+    .avatar-info h3 { font-family: var(--font-serif); font-size: 1.1rem; font-weight: 400; }
+    .avatar-info p  {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #6a4a20;
+      margin-top: 2px;
+    }
+    .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+    .skill {
+      background: var(--cream);
+      border: var(--border);
+      box-shadow: 3px 3px 0 var(--black);
+      padding: 7px 13px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* SECTIONS */
+    .content-section { padding: 4.5rem 4rem; border-bottom: var(--border); }
+    .content-section h2 {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.8rem;
+      font-weight: 400;
+      margin-bottom: 2.25rem;
+      border-bottom: var(--border);
+      padding-bottom: 0.9rem;
+    }
+
+    /* PHILOSOPHY */
+    .phil-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      border: var(--border);
+      box-shadow: var(--shadow-lg);
+    }
+    .phil-item {
+      padding: 2.25rem 1.75rem;
+      border-right: var(--border);
+      background: var(--cream);
+    }
+    .phil-item:last-child { border-right: none; }
+    .phil-item:nth-child(2) { background: var(--warm-orange); }
+    .phil-num {
+      display: block;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 2.2rem;
+      color: rgba(26,18,8,0.12);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .phil-item h3 { font-family: var(--font-serif); font-size: 0.98rem; font-weight: 400; margin-bottom: 0.5rem; }
+    .phil-item:nth-child(2) h3 { color: var(--cream); }
+    .phil-item p  { font-size: 0.83rem; line-height: 1.65; color: #5a4030; }
+    .phil-item:nth-child(2) p  { color: rgba(245,237,216,0.8); }
+
+    /* TIMELINE */
+    .timeline { border: var(--border); box-shadow: var(--shadow); }
+    .t-row {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      border-bottom: var(--border);
+    }
+    .t-row:last-child { border-bottom: none; }
+    .t-year {
+      background: var(--black);
+      color: var(--warm-yellow);
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      border-right: var(--border);
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .t-content { padding: 1.25rem 1.75rem; background: var(--cream); }
+    .t-content h4 { font-family: var(--font-serif); font-size: 0.95rem; font-weight: 400; margin-bottom: 0.2rem; }
+    .t-content p  { font-size: 0.82rem; color: #6a5040; line-height: 1.6; }
+
+    /* CTA */
+    .about-cta {
+      background: var(--black);
+      color: var(--cream);
+      padding: 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .about-cta h2 {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.75rem;
+      font-weight: 400;
+    }
+    .about-cta h2 span { color: var(--warm-yellow); }
+
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      .about-hero   { grid-template-columns: 1fr; min-height: auto; }
+      .hero-left    { padding: 3.5rem 2rem; border-right: none; border-bottom: var(--border); }
+      .hero-left::after { display: none; }
+      .hero-right   { padding: 3rem 2rem; }
+      .phil-grid    { grid-template-columns: 1fr; }
+      .phil-item    { border-right: none; border-bottom: var(--border); }
+      .phil-item:last-child { border-bottom: none; }
+      .content-section { padding: 3.5rem 2rem; }
+      .about-cta    { padding: 3rem 2rem; flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 480px) {
+      .about-name   { font-size: 1.9rem; }
+      .avatar       { width: 58px; height: 58px; font-size: 1.4rem; }
+      .skills-grid  { grid-template-columns: 1fr 1fr; gap: 0.35rem; }
+      .about-cta h2 { font-size: 1.4rem; }
+      .t-row        { grid-template-columns: 70px 1fr; }
+      .t-year       { font-size: 0.9rem; padding: 1rem 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <nav>
+    <a href="landing.html" class="nav-logo"><strong>AC</strong>Arpit Codes</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="landing.html"     class="nav-btn">Home</a></li>
+      <li><a href="card_layout.html" class="nav-btn">Read Blogs</a></li>
+      <li><a href="about.html"       class="nav-btn active">About</a></li>
+      <li><a href="https://forms.gle/bAB9upZCvxVqhP1UA" target="_blank" class="nav-btn">Feedback ↗</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="about-hero">
+      <div class="hero-left">
+        <div class="section-label" style="background:transparent;border-color:rgba(240,192,64,0.3);color:rgba(240,192,64,0.55)">About</div>
+        <h1 class="about-name anim-up">
+          The writer<br><em>behind the blog.</em>
+        </h1>
+        <p class="about-role anim-up" style="animation-delay:.08s">Problem Solver · Developer · Overthinker</p>
+        <p class="about-bio anim-up" style="animation-delay:.14s">
+          A curious student-engineer blending code with design to explore how systems feel and function. This blog is where raw thoughts, builds, and lessons get put.
+        </p>
+        <div class="social-row anim-up" style="animation-delay:.2s">
+          <a href="https://x.com/arpit_codes" target="_blank" rel="noopener noreferrer" class="social-link">X ↗</a>
+          <a href="https://github.com/arpit-sketch" target="_blank" rel="noopener noreferrer" class="social-link">GitHub ↗</a>
+          <a href="https://www.linkedin.com/in/arpit-sketch" target="_blank" rel="noopener noreferrer" class="social-link">LinkedIn ↗</a>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="avatar-row" data-reveal>
+          <div class="avatar">AC</div>
+          <div class="avatar-info">
+            <h3>Arpit Srivastava</h3>
+            <p>Surat, India</p>
+          </div>
+        </div>
+        <div data-reveal data-delay="80">
+          <div class="section-label">Works with</div>
+          <div class="skills-grid">
+            <div class="skill">Python</div>
+            <div class="skill">HTML / CSS</div>
+            <div class="skill">JavaScript</div>
+            <div class="skill">NodeJs</div>
+            <div class="skill">Git / GitHub</div>
+            <div class="skill">System Design</div>
+          </div>
+        </div>
+        <div data-reveal data-delay="140">
+          <a href="card_layout.html" class="btn btn-black" style="display:block;text-align:center">Read the blog →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Philosophy -->
+    <section class="content-section">
+      <div class="section-label">Philosophy</div>
+      <h2>How I think</h2>
+      <div class="phil-grid" data-reveal>
+        <div class="phil-item">
+          <span class="phil-num">01</span>
+          <h3>Depth over trends. Systems over shortcuts.</h3>
+          <p>Backend developer focused on building reliable APIs with Node.js while going deep into DSA and system design.</p>
+        </div>
+        <div class="phil-item">
+          <span class="phil-num">02</span>
+          <h3>Building backends that scale, not just run.</h3>
+          <p>Focused on Node.js, clean architecture, and understanding how systems behave beyond the happy path.</p>
+        </div>
+        <div class="phil-item">
+          <span class="phil-num">03</span>
+          <h3>From fundamentals to production.</h3>
+          <p>Exploring backend engineering through real-world projects, with a focus on performance, structure, and long-term maintainability.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Journey -->
+    <section class="content-section">
+      <div class="section-label">Journey</div>
+      <h2>Where I've been</h2>
+      <div class="timeline" data-reveal>
+        <div class="t-row">
+          <div class="t-year">2026</div>
+          <div class="t-content">
+            <h4>Google Winter of Code (2nd place)</h4>
+            <p>Worked on backend in a competitive open-source environment. Learned to write better APIs, optimize queries, and collaborate under constraints.</p>
+          </div>
+        </div>
+        <div class="t-row">
+          <div class="t-year">2025-2026</div>
+          <div class="t-content">
+            <h4>Built real-world projects</h4>
+            <p>Developed backend systems with authentication, REST APIs, and production deployments. Focused on performance and clean architecture.</p>
+          </div>
+        </div>
+        <div class="t-row">
+          <div class="t-year">2025</div>
+          <div class="t-content">
+            <h4>Started backend seriously</h4>
+            <p>Shifted from chemistry to backend development. Began building APIs, learning DSA, and understanding how real systems work.</p>
+          </div>
+        </div>
+        <div class="t-row">
+          <div class="t-year">2025</div>
+          <div class="t-content">
+            <h4>Learned to code,Started a Chem degree</h4>
+            <p>Began in core science, which shaped analytical thinking—later applied to programming and problem-solving.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <div class="about-cta" data-reveal>
+      <h2>Have thoughts?<br><span>Drop some feedback.</span></h2>
+      <a href="https://forms.gle/bAB9upZCvxVqhP1UA" target="_blank" class="btn" style="white-space:nowrap;flex-shrink:0">Open form ↗</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-logo">Arpit Codes</div>
+    <p>© 2026 · Coding &amp; Coffee </p>
+  </footer>
+
+  <script src="blog-data.js"></script>
+  <script src="cursor.js"></script>
+</body>
+</html>

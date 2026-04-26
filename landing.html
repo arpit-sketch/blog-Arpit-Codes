@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arpit Codes</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* HERO */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: calc(100vh - 54px);
+      border-bottom: var(--border);
+    }
+    .hero-left {
+      padding: 5rem 4rem;
+      border-right: var(--border);
+      background: var(--cream);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.75rem;
+    }
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--warm-brown);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 24px; height: 2px;
+      background: var(--warm-brown);
+    }
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.6rem, 4.5vw, 4.2rem);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -1px;
+    }
+    .hero-title em { font-style: italic; color: var(--warm-orange); }
+    .hero-title .block {
+      display: inline-block;
+      background: var(--black);
+      color: var(--cream);
+      padding: 0 10px;
+      font-style: normal;
+    }
+    .hero-desc {
+      font-size: 0.9rem;
+      line-height: 1.75;
+      color: #5a4530;
+      max-width: 400px;
+    }
+    .hero-ctas { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+    .hero-right {
+      background: var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg-letter {
+      position: absolute;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 20rem;
+      color: rgba(240,192,64,0.05);
+      line-height: 1;
+      bottom: -3rem; right: -2rem;
+      pointer-events: none;
+      user-select: none;
+    }
+    .hero-stats-card {
+      border: 2px solid rgba(240,192,64,0.2);
+      padding: 2.25rem;
+      width: 260px;
+      position: relative;
+      z-index: 2;
+    }
+    .stats-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(240,192,64,0.45);
+      margin-bottom: 1.5rem;
+    }
+    .stat-row {
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(240,192,64,0.12);
+    }
+    .stat-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .stat-row:first-of-type { padding-top: 0; }
+    .stat-num {
+      display: block;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 2.2rem;
+      color: var(--warm-yellow);
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+    .stat-lbl {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(245,237,216,0.4);
+    }
+
+    /* SCROLL HINT — lives outside the grid */
+    .scroll-hint {
+      background: var(--cream);
+      border-bottom: var(--border);
+      padding: 0.75rem 4rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      color: #9a7d60;
+    }
+    .scroll-line {
+      width: 28px; height: 1.5px;
+      background: #c8a880;
+      position: relative;
+      overflow: hidden;
+    }
+    .scroll-line::after {
+      content: '';
+      position: absolute;
+      left: -100%; top: 0;
+      width: 100%; height: 100%;
+      background: var(--black);
+      animation: slideIn 1.6s ease infinite;
+    }
+
+    /* LATEST SECTION */
+    .latest-section { padding: 5rem 4rem 4rem; }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: var(--border);
+      padding-bottom: 1.25rem;
+      margin-bottom: 2.75rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .section-header h2 {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.75rem;
+      font-weight: 400;
+    }
+
+    /* FEATURED CARD */
+    .featured-card {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      border: var(--border);
+      box-shadow: var(--shadow-lg);
+      text-decoration: none;
+      color: var(--black);
+      transition: transform 0.12s, box-shadow 0.12s;
+    }
+    .featured-card:hover { transform: translate(-3px,-3px); box-shadow: 10px 10px 0 var(--black); }
+
+    .fc-left {
+      background: var(--warm-yellow);
+      border-right: var(--border);
+      padding: 3rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 280px;
+      position: relative;
+      overflow: hidden;
+    }
+    .fc-left::after {
+      content: attr(data-letter);
+      position: absolute;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 10rem;
+      color: rgba(26,18,8,0.07);
+      bottom: -1rem; right: -0.5rem;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .fc-tag {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border: var(--border);
+      padding: 3px 9px;
+      background: var(--black);
+      color: var(--cream);
+      width: fit-content;
+    }
+    .fc-date {
+      font-family: var(--font-mono);
+      font-size: 0.63rem;
+      color: #5a4020;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .fc-right {
+      background: var(--cream);
+      padding: 2.75rem 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .fc-title {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 400;
+      line-height: 1.25;
+      letter-spacing: -0.3px;
+    }
+    .fc-excerpt { font-size: 0.87rem; line-height: 1.75; color: #5a4530; flex: 1; }
+    .fc-read {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .fc-arrow {
+      width: 26px; height: 26px;
+      background: var(--black);
+      color: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      border: var(--border);
+      transition: transform 0.1s;
+    }
+    .featured-card:hover .fc-arrow { transform: translate(2px,-2px); }
+
+    /* PILLARS */
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      border: var(--border);
+      box-shadow: var(--shadow);
+      margin-top: 4rem;
+    }
+    .pillar {
+      padding: 2.25rem 1.75rem;
+      border-right: var(--border);
+      background: var(--cream);
+    }
+    .pillar:last-child { border-right: none; }
+    .pillar-num {
+      display: block;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 2.2rem;
+      color: var(--warm-tan);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .pillar h3 { font-family: var(--font-serif); font-size: 1rem; font-weight: 400; margin-bottom: 0.5rem; }
+    .pillar p  { font-size: 0.83rem; line-height: 1.65; color: #6a5540; }
+
+    /* ABOUT STRIP */
+    .about-strip {
+      background: var(--black);
+      color: var(--cream);
+      border-top: var(--border);
+      padding: 4rem;
+      margin-top: 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+    .about-strip h2 {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.9rem;
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 0.6rem;
+    }
+    .about-strip h2 span { color: var(--warm-yellow); }
+    .about-strip p { font-size: 0.87rem; line-height: 1.7; color: rgba(245,237,216,0.6); max-width: 460px; }
+
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      .hero                 { grid-template-columns: 1fr; min-height: auto; }
+      .hero-left            { padding: 3.5rem 2rem; border-right: none; border-bottom: var(--border); }
+      .hero-right           { padding: 3rem 2rem; min-height: 260px; }
+      .hero-stats-card      { width: 100%; max-width: 300px; }
+      .featured-card        { grid-template-columns: 1fr; }
+      .fc-left              { min-height: 120px; padding: 2rem; }
+      .fc-right             { padding: 2rem; }
+      .pillars              { grid-template-columns: 1fr; }
+      .pillar               { border-right: none; border-bottom: var(--border); }
+      .pillar:last-child    { border-bottom: none; }
+      .latest-section       { padding: 3.5rem 2rem 3rem; }
+      .about-strip          { padding: 3rem 2rem; gap: 1.5rem; }
+      .scroll-hint          { padding: 0.75rem 2rem; }
+    }
+    @media (max-width: 480px) {
+      .hero-title           { font-size: 2.3rem; }
+      .hero-ctas            { flex-direction: column; }
+      .hero-ctas .btn       { text-align: center; }
+      .fc-title             { font-size: 1.25rem; }
+      .about-strip h2       { font-size: 1.5rem; }
+      .section-header       { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <nav>
+    <a href="landing.html" class="nav-logo"><strong>AC</strong>Arpit Codes</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="landing.html"     class="nav-btn active">Home</a></li>
+      <li><a href="card_layout.html" class="nav-btn">Read Blogs</a></li>
+      <li><a href="about.html"       class="nav-btn">About</a></li>
+      <li><a href="https://forms.gle/bAB9upZCvxVqhP1UA" target="_blank" class="nav-btn">Feedback ↗</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-left">
+        <span class="hero-eyebrow anim-up">Est. 2026 · Code &amp; Coffee</span>
+        <h1 class="hero-title anim-up" style="animation-delay:.08s">
+          Writing about<br>
+          <em>Code,</em> Tech<br>
+          &amp; <span class="block">Systems</span>
+        </h1>
+        <p class="hero-desc anim-up" style="animation-delay:.16s">
+          A personal blog about making and learning things on the web. Honest takes, useful content , and Posts worth chewing on.
+        </p>
+        <div class="hero-ctas anim-up" style="animation-delay:.22s">
+          <a href="card_layout.html" class="btn">Read Blogs →</a>
+          <a href="about.html"       class="btn btn-black">About Me</a>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <span class="hero-bg-letter">A</span>
+        <div class="hero-stats-card anim-up" style="animation-delay:.3s">
+          <div class="stats-label">At a glance</div>
+          <div class="stat-row">
+            <span class="stat-num">4</span>
+            <span class="stat-lbl">Posts published</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-num">4</span>
+            <span class="stat-lbl">Topics covered</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-num">0</span>
+            <span class="stat-lbl">Paywalls</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="scroll-hint">
+      <span class="scroll-line"></span>
+      Scroll to read
+    </div>
+
+    <div class="ticker-wrap">
+      <div class="ticker-inner">
+        <span>NodeJs</span><span>Web Developement</span><span>Backend Systems</span>
+        <span>TypeScript</span><span>AI</span><span>Data</span>
+        <span>NodeJs</span><span>Web Developement</span><span>Backend Systems</span>
+        <span>TypeScript</span><span>AI</span><span>Data</span>
+      </div>
+    </div>
+
+    <section class="latest-section" id="latest">
+      <div class="section-header" data-reveal>
+        <div>
+          <div class="section-label">Latest</div>
+          <h2>Most recent post</h2>
+        </div>
+        <a href="card_layout.html" class="btn btn-tan">All posts →</a>
+      </div>
+
+      <div id="featured-wrap" data-reveal data-delay="80"></div>
+
+      <div class="pillars" data-reveal data-delay="120">
+        <div class="pillar">
+          <span class="pillar-num">01</span>
+          <h3>Opinionated</h3>
+          <p>Each post commits to a position. No "it depends" fence-sitting.</p>
+        </div>
+        <div class="pillar">
+          <span class="pillar-num">02</span>
+          <h3>Practical</h3>
+          <p>Every concept connects to something you can build or apply today.</p>
+        </div>
+        <div class="pillar">
+          <span class="pillar-num">03</span>
+          <h3>Free, forever</h3>
+          <p>No paywalls, no gates. Just writing — read it, share it, use it.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="about-strip" data-reveal>
+      <div>
+        <h2>Behind the blog, <span>there's a human.</span></h2>
+        <p>A developer who thinks too much about Designing Systems and performance. This blog exists because good ideas deserve to be written down.</p>
+      </div>
+      <a href="about.html" class="btn" style="white-space:nowrap;flex-shrink:0">Meet me →</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-logo">Arpit Codes</div>
+    <p>© 2026 · Code &amp; Coffee </p>
+  </footer>
+
+  <script src="blog-data.js"></script>
+  <script src="cursor.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var post = getLatestPost();
+      if (!post) return;
+      document.getElementById('featured-wrap').innerHTML =
+        '<a href="blog_post.html?id=' + post.id + '" class="featured-card">' +
+          '<div class="fc-left" data-letter="' + post.tag[0] + '">' +
+            '<span class="fc-tag">' + post.tag + '</span>' +
+            '<span class="fc-date">' + formatDate(post.date) + ' · ' + post.readTime + '</span>' +
+          '</div>' +
+          '<div class="fc-right">' +
+            '<h2 class="fc-title">' + post.title + '</h2>' +
+            '<p class="fc-excerpt">' + post.excerpt + '</p>' +
+            '<div class="fc-read"><span class="fc-arrow">→</span><span>Read post</span></div>' +
+          '</div>' +
+        '</a>';
+    });
+  </script>
+</body>
+</html>

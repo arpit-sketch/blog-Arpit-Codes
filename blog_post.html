@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post — Arpit Codes</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* PROGRESS */
+    #progress {
+      position: fixed;
+      top: 54px; left: 0;
+      height: 3px;
+      background: var(--warm-orange);
+      z-index: 999;
+      width: 0%;
+      transition: width 0.08s linear;
+    }
+
+    /* POST HEADER */
+    .post-header {
+      background: var(--cream);
+      border-bottom: var(--border);
+      padding: 4.5rem 4rem 3.5rem;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-decoration: none;
+      color: var(--warm-brown);
+      margin-bottom: 2rem;
+    }
+    .back-link:hover { color: var(--black); }
+    .post-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      padding: 3px 9px;
+      border: var(--border);
+      box-shadow: var(--shadow);
+      margin-bottom: 1.4rem;
+    }
+    .post-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.3px;
+      margin-bottom: 1.5rem;
+      max-width: 720px;
+    }
+    .post-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #8a6840;
+    }
+
+    /* LAYOUT */
+    .post-layout {
+      display: grid;
+      grid-template-columns: 1fr 240px;
+      align-items: start;
+      border-bottom: var(--border);
+    }
+
+    /* ARTICLE */
+    .post-body {
+      padding: 4rem 4rem 5rem;
+      border-right: var(--border);
+      min-width: 0;
+    }
+    .post-content { max-width: 640px; }
+    .post-content p     { font-size: 0.98rem; line-height: 1.85; margin-bottom: 1.5rem; color: #2a1e10; }
+    .post-content h2    {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.4rem;
+      font-weight: 400;
+      margin: 2.75rem 0 1rem;
+      padding-left: 0.85rem;
+      border-left: 3px solid var(--warm-orange);
+    }
+    .post-content h3    { font-family: var(--font-serif); font-size: 1.05rem; font-weight: 400; margin: 2rem 0 0.7rem; font-style: italic; }
+    .post-content ul,
+    .post-content ol    { padding-left: 1.4rem; margin-bottom: 1.5rem; }
+    .post-content li    { font-size: 0.95rem; line-height: 1.75; margin-bottom: 0.4rem; color: #2a1e10; }
+    .post-content strong { font-weight: 600; background: rgba(240,192,64,0.3); padding: 0 2px; }
+    .post-content em     { font-style: italic; }
+    .post-content pre   {
+      background: var(--black);
+      color: var(--warm-yellow);
+      padding: 1.5rem;
+      margin: 1.75rem 0;
+      border: var(--border);
+      box-shadow: var(--shadow);
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      line-height: 1.65;
+    }
+    .post-content code  {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      background: rgba(26,18,8,0.07);
+      padding: 1px 5px;
+      border: 1px solid rgba(26,18,8,0.12);
+    }
+    .post-content pre code { background: transparent; border: none; padding: 0; color: var(--warm-yellow); }
+
+    /* ASIDE */
+    .post-aside {
+      padding: 2.5rem 1.75rem;
+      position: sticky;
+      top: 54px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .aside-box { border: var(--border); overflow: hidden; }
+    .aside-head {
+      background: var(--black);
+      color: var(--cream);
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      padding: 7px 12px;
+    }
+    .aside-body { padding: 1.1rem 1.25rem; background: var(--cream); }
+    .toc-link {
+      display: block;
+      text-decoration: none;
+      color: #6a4a28;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      line-height: 1.4;
+      padding: 5px 0;
+      border-bottom: 1px dashed var(--warm-tan);
+      transition: color 0.1s;
+    }
+    .toc-link:last-child { border-bottom: none; }
+    .toc-link:hover { color: var(--black); }
+    .related-link {
+      display: block;
+      text-decoration: none;
+      color: var(--black);
+      padding: 9px 0;
+      border-bottom: 1px solid var(--warm-tan);
+    }
+    .related-link:last-child { border-bottom: none; }
+    .related-link span {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #9a7d60;
+      margin-bottom: 2px;
+    }
+    .related-link strong { font-family: var(--font-serif); font-weight: 400; font-size: 0.85rem; line-height: 1.3; }
+    .related-link:hover strong { text-decoration: underline; }
+
+    /* MORE POSTS */
+    .more-posts { padding: 4rem; }
+    .more-posts h3 {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 2rem;
+      border-bottom: var(--border);
+      padding-bottom: 1rem;
+    }
+    .more-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      border: var(--border);
+      box-shadow: var(--shadow);
+    }
+    .more-card {
+      padding: 1.6rem;
+      border-right: var(--border);
+      text-decoration: none;
+      color: var(--black);
+      background: var(--cream);
+      transition: background 0.1s;
+    }
+    .more-card:last-child { border-right: none; }
+    .more-card:hover { background: var(--warm-yellow); }
+    .more-tag { display: block; font-family: var(--font-mono); font-size: 0.58rem; text-transform: uppercase; letter-spacing: 1.5px; color: #9a7d60; margin-bottom: 0.4rem; }
+    .more-card h4 { font-family: var(--font-serif); font-size: 0.95rem; font-weight: 400; line-height: 1.3; margin-bottom: 0.3rem; }
+    .more-card p  { font-family: var(--font-mono); font-size: 0.6rem; color: #9a7d60; }
+
+    /* NOT FOUND */
+    .not-found { padding: 6rem 4rem; text-align: center; }
+    .not-found h1 { font-family: var(--font-serif); font-style: italic; font-size: 2.5rem; font-weight: 400; margin-bottom: 1.5rem; }
+
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      .post-layout  { grid-template-columns: 1fr; }
+      .post-aside   { display: none; }
+      .post-body    { padding: 3rem 2.5rem 4rem; border-right: none; }
+      .more-posts   { padding: 3rem 2.5rem; }
+      .more-grid    { grid-template-columns: 1fr 1fr; }
+      .more-card    { border-bottom: var(--border); }
+      .more-card:nth-child(odd) { border-right: var(--border) !important; }
+      .more-card:nth-child(even){ border-right: none !important; }
+      .more-card:nth-last-child(-n+2) { border-bottom: none; }
+    }
+    @media (max-width: 600px) {
+      .post-header  { padding: 3rem 1.75rem 2.5rem; }
+      .post-body    { padding: 2.5rem 1.75rem 3rem; }
+      .post-meta    { gap: 0.75rem; flex-direction: column; }
+      .more-posts   { padding: 2.5rem 1.75rem; }
+      .more-grid    { grid-template-columns: 1fr; }
+      .more-card    { border-right: none !important; border-bottom: var(--border) !important; }
+      .more-card:last-child { border-bottom: none !important; }
+      .post-content h2 { font-size: 1.2rem; }
+      .post-title   { font-size: 1.7rem; }
+    }
+  </style>
+</head>
+<body>
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+  <div id="progress"></div>
+
+  <nav>
+    <a href="landing.html" class="nav-logo"><strong>AC</strong>Arpit Codes</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="landing.html"     class="nav-btn">Home</a></li>
+      <li><a href="card_layout.html" class="nav-btn active">Read Blogs</a></li>
+      <li><a href="about.html"       class="nav-btn">About</a></li>
+      <li><a href="https://forms.gle/bAB9upZCvxVqhP1UA" target="_blank" class="nav-btn">Feedback ↗</a></li>
+    </ul>
+  </nav>
+
+  <main id="post-main"></main>
+
+  <footer>
+    <div class="footer-logo">Arpit Codes</div>
+    <p>© 2026 · Coding &amp; Coffee</p>
+  </footer>
+
+  <script src="blog-data.js"></script>
+  <script src="cursor.js"></script>
+  <script>
+    var TAG_COLORS = {
+      "Web Development":     'var(--warm-yellow)',
+      "AI & Machine Learning": 'var(--warm-orange)',
+      "Data Science":        'var(--warm-tan)',
+      "Others":         'var(--warm-red)'
+    };
+
+    var params  = new URLSearchParams(window.location.search);
+    var postId  = params.get('id');
+    var post    = getPostById(postId);
+    var main    = document.getElementById('post-main');
+
+    if (!post) {
+      document.title = 'Not Found — Arpit Codes';
+      main.innerHTML =
+        '<div class="not-found">' +
+          '<h1>Post not found.</h1>' +
+          '<a href="card_layout.html" class="btn">← Back to all posts</a>' +
+        '</div>';
+    } else {
+      document.title = post.title + ' — Arpit Codes';
+      var tagColor = TAG_COLORS[post.tag] || 'var(--warm-tan)';
+      var related  = BLOG_POSTS.filter(function(p){ return p.id !== post.id; }).slice(0,3);
+
+      var relatedAsideHTML = related.map(function(r){
+        return '<a href="blog_post.html?id=' + r.id + '" class="related-link">' +
+                 '<span>' + r.tag + '</span>' +
+                 '<strong>' + r.title + '</strong>' +
+               '</a>';
+      }).join('');
+
+      var moreGridHTML = related.map(function(r){
+        return '<a href="blog_post.html?id=' + r.id + '" class="more-card">' +
+                 '<span class="more-tag">' + r.tag + '</span>' +
+                 '<h4>' + r.title + '</h4>' +
+                 '<p>' + formatDate(r.date) + ' · ' + r.readTime + '</p>' +
+               '</a>';
+      }).join('');
+
+      main.innerHTML =
+        '<div class="post-header">' +
+          '<a href="card_layout.html" class="back-link">← All posts</a>' +
+          '<div class="post-tag" style="background:' + tagColor + '">' + post.tag + '</div>' +
+          '<h1 class="post-title">' + post.title + '</h1>' +
+          '<div class="post-meta">' +
+            '<span>' + formatDate(post.date) + ' · ' + post.time + '</span>' +
+            '<span>' + post.readTime + '</span>' +
+          '</div>' +
+        '</div>' +
+
+        '<div class="post-layout">' +
+          '<div class="post-body">' +
+            '<div class="post-content" id="post-content">' + post.content + '</div>' +
+          '</div>' +
+          '<aside class="post-aside">' +
+            '<div class="aside-box">' +
+              '<div class="aside-head">Contents</div>' +
+              '<div class="aside-body" id="toc-body"></div>' +
+            '</div>' +
+            '<div class="aside-box">' +
+              '<div class="aside-head">More posts</div>' +
+              '<div class="aside-body">' + relatedAsideHTML + '</div>' +
+            '</div>' +
+          '</aside>' +
+        '</div>' +
+
+        '<div class="more-posts">' +
+          '<h3>Keep reading →</h3>' +
+          '<div class="more-grid">' + moreGridHTML + '</div>' +
+        '</div>';
+
+      // Build TOC from h2 tags
+      var headings = document.querySelectorAll('#post-content h2');
+      var tocBody  = document.getElementById('toc-body');
+      if (headings.length && tocBody) {
+        var tocHTML = '';
+        headings.forEach(function(h, i) {
+          var id = 'sec-' + i;
+          h.id = id;
+          tocHTML += '<a href="#' + id + '" class="toc-link">' + h.textContent + '</a>';
+        });
+        tocBody.innerHTML = tocHTML;
+      } else if (tocBody) {
+        tocBody.innerHTML = '<p style="font-size:0.78rem;color:#9a7d60">No sections.</p>';
+      }
+    }
+
+    // Reading progress bar
+    window.addEventListener('scroll', function() {
+      var doc = document.documentElement;
+      var pct = (doc.scrollTop / (doc.scrollHeight - doc.clientHeight)) * 100;
+      document.getElementById('progress').style.width = Math.min(pct, 100) + '%';
+    });
+  </script>
+</body>
+</html>

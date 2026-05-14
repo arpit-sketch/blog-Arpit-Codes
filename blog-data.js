@@ -3,7 +3,74 @@
 // It will automatically appear on the listing page and landing page.
 
 const BLOG_POSTS = [
+
   {
+  id: "javascript-async-architecture",
+  title: "How JavaScript Actually Handles Async: A Deep Dive Into the Engine Room",
+  excerpt: "JavaScript is single-threaded. Yet it handles thousands of concurrent operations without breaking a sweat. The architecture behind that trick is more elegant — and more deliberate — than most developers ever stop to appreciate.",
+  date: "2026-05-14",
+  time: "10:00 AM",
+  tag: "Web Development",
+  tagColor: "var(--warm-yellow)",
+  readTime: "10 min read",
+  content: `
+    <p>Most developers learn that JavaScript is single-threaded early on, nod, and move on. It becomes a footnote — a quirky limitation you work around. But that single fact is actually the foundation of an architectural decision that shapes everything about how JavaScript behaves. Understanding <em>why</em> JavaScript is single-threaded, and how it manages to be genuinely useful despite that constraint, is one of the most clarifying things you can do as a developer who works with it seriously.</p>
+    <p>This isn't a beginner's guide to async/await. This is about the machinery underneath — the call stack, the event loop, the task queues, the Web APIs — and how they compose into a runtime that can juggle thousands of concurrent operations on a single thread without collapsing under its own weight.</p>
+
+    <h2>The Single-Threaded Reality</h2>
+    <p>JavaScript was designed in 1995 for a browser. Its job was to respond to user interactions — clicks, form submissions, hover states. For that use case, a single thread made complete sense. Multithreading introduces complexity: race conditions, deadlocks, shared memory conflicts. For a scripting language running inside a webpage, that complexity would have been catastrophic. So Brendan Eich made a deliberate choice: one thread, one thing at a time.</p>
+    <p>The implication is absolute. There is exactly one call stack. There is exactly one piece of JavaScript executing at any given moment. No parallelism, no preemption, no context switching between threads. When your code runs, it runs to completion — nothing can interrupt it mid-execution.</p>
+    <p>This is simultaneously JavaScript's greatest constraint and the source of one of its most underappreciated properties: your code is <em>never</em> interrupted. No locks. No mutexes. No need to defend shared state against concurrent access. The single thread is the guarantee.</p>
+
+    <h2>The Call Stack: JavaScript's Execution Memory</h2>
+    <p>The call stack is where JavaScript tracks what it's currently doing. Every time a function is called, a new frame is pushed onto the stack containing that function's arguments, local variables, and return address. When the function returns, its frame is popped. The stack is always a precise snapshot of the current execution path.</p>
+    <p>This is synchronous execution in its purest form. Consider a chain of three function calls — <code>a()</code> calls <code>b()</code> calls <code>c()</code>. The stack builds up: <code>a</code>, then <code>b</code> on top of <code>a</code>, then <code>c</code> on top of <code>b</code>. As each returns, frames pop off in reverse order. Neat, deterministic, traceable.</p>
+    <p>The problem arrives the moment you introduce something that takes time. A network request. A file read. A timer. If the call stack had to wait for these — blocking until they resolved — the entire thread would freeze. The browser would lock up. No repaints, no user input processing, nothing. This is what "blocking the main thread" actually means, and it's why it's so catastrophic in a UI context.</p>
+    <p>The solution isn't to add threads. It's to offload the waiting.</p>
+
+    <h2>Web APIs: The Runtime's Extended Arms</h2>
+    <p>Here's where the architecture gets interesting. The JavaScript engine itself — V8, SpiderMonkey, JavaScriptCore — is not the entire runtime. In a browser, the runtime also includes a set of Web APIs provided by the browser environment: <code>setTimeout</code>, <code>fetch</code>, <code>XMLHttpRequest</code>, <code>addEventListener</code>, the Geolocation API, and dozens more.</p>
+    <p>These APIs are not JavaScript. They are C++ code running in the browser, outside the JavaScript engine, on separate threads. When your JavaScript calls <code>setTimeout(callback, 1000)</code>, it is not JavaScript that waits one second. It hands the timer and the callback off to the browser's timer API — which runs independently — and the call stack immediately moves on. The JavaScript thread is free. The browser handles the waiting.</p>
+    <p>This is the fundamental insight that makes everything else click. JavaScript doesn't do async work. It <em>delegates</em> async work to the environment and arranges to be notified when it's done. The engine stays unblocked. The single thread stays productive.</p>
+    <p>When the delegated work completes — the timer fires, the network response arrives, the user clicks — the environment needs to hand control back to JavaScript. But it can't just interrupt the running code. Remember: no preemption. This is where the queues come in.</p>
+
+    <h2>The Task Queue and the Microtask Queue</h2>
+    <p>There are actually two queues, and the distinction between them is one of the most misunderstood details in JavaScript's execution model.</p>
+    <p>The <strong>task queue</strong> — sometimes called the macrotask queue or callback queue — holds callbacks from Web APIs once their work is done. A <code>setTimeout</code> callback lands here when the timer expires. A <code>fetch</code> callback lands here when the response arrives. These are coarse-grained units of work, scheduled to run in a future iteration of the event loop.</p>
+    <p>The <strong>microtask queue</strong> holds callbacks from Promises and <code>queueMicrotask()</code>. This queue has higher priority than the task queue — and dramatically so. After every task completes, before the event loop picks up the next task, the entire microtask queue is drained. Every pending microtask runs to completion. Then and only then does the event loop look at the task queue again.</p>
+    <p>The practical consequence: Promise callbacks always run before the next <code>setTimeout</code> callback, even if the timeout is zero. A resolved Promise's <code>.then()</code> handler is not just "soon" — it's "before anything else gets a turn." This is by design. Promises are meant to represent the immediate continuation of an operation, not a deferred future task.</p>
+
+    <h2>The Event Loop: The Conductor</h2>
+    <p>The event loop is the mechanism that ties all of this together. It is, at its core, a simple loop — running continuously as long as the runtime is alive — that asks one question on every iteration: is the call stack empty?</p>
+    <p>If the call stack is not empty, the event loop waits. Executing code finishes at its own pace.</p>
+    <p>If the call stack is empty, the event loop first checks the microtask queue. If there are microtasks pending, it runs them — all of them — pushing each onto the call stack in turn, waiting for each to complete, checking for new microtasks after each one. The microtask queue must be completely empty before proceeding.</p>
+    <p>Only when the microtask queue is fully drained does the event loop look at the task queue. It picks exactly one task, pushes it onto the call stack, and lets it run to completion. Then the cycle repeats: microtasks, one task, microtasks, one task.</p>
+    <p>This precise ordering — synchronous code, then all microtasks, then one macrotask, repeat — is the execution model of JavaScript. Every async behavior you've ever encountered is an expression of this loop.</p>
+
+    <h2>The Evolution of Async Patterns</h2>
+    <p>Understanding the architecture makes the evolution of async patterns in JavaScript read less like arbitrary API churn and more like a deliberate progression toward better ways of expressing the same underlying mechanics.</p>
+    <ul>
+      <li><strong>Callbacks (1995–2012):</strong> The original pattern. Pass a function, get called back when the work is done. Direct, low-overhead, and completely sufficient for simple cases. The problem wasn't callbacks themselves — it was nested callbacks, where sequential async operations produced the infamous "callback hell": deeply indented pyramids of error handling and logic that were nearly impossible to reason about or refactor.</li>
+      <li><strong>Promises (ES2015):</strong> A first-class object representing a value that will exist in the future. Promises flattened the pyramid — chained <code>.then()</code> calls replaced nested callbacks, error handling centralized into <code>.catch()</code>, and async operations became composable with <code>Promise.all()</code> and <code>Promise.race()</code>. Critically, Promise callbacks run as microtasks — a deliberate architectural choice that gave them their predictable, high-priority execution timing.</li>
+      <li><strong>Async/Await (ES2017):</strong> Syntactic sugar over Promises that makes async code read like synchronous code. An <code>await</code> expression suspends the current async function — not the thread, not the event loop, just the function — and resumes it when the awaited Promise resolves. Under the hood, nothing changed. The event loop, the microtask queue, the call stack — same mechanics. Async/await is purely a readability transformation. But it's a profound one: complex async flows that previously required careful Promise chaining became straightforward sequential code.</li>
+      <li><strong>Async Iterators and Generators (ES2018+):</strong> For streaming data — where values arrive over time rather than all at once — async generators and the <code>for await...of</code> loop extended the async/await model to sequences. Reading a stream of database records, processing server-sent events, consuming a paginated API — these patterns became expressible in the same clean sequential style that async/await brought to single operations.</li>
+    </ul>
+
+    <h2>Where It Can Still Break</h2>
+    <p>Even with this architecture fully understood, there are failure modes worth internalizing:</p>
+    <ul>
+      <li><strong>Blocking the event loop:</strong> Any synchronous operation that takes significant time — a CPU-intensive computation, a massive JSON parse, a synchronous file read on a large file — blocks the call stack and starves the event loop. No async callbacks run, no UI updates render, no incoming requests get handled. For Node.js servers, this is a production incident waiting to happen.</li>
+      <li><strong>Microtask queue starvation:</strong> If a microtask schedules another microtask, which schedules another, indefinitely — the task queue never gets a turn. The event loop is stuck draining an infinite microtask queue. This is rare but real, and it's a subtle footgun in recursive Promise patterns.</li>
+      <li><strong>Unhandled Promise rejections:</strong> A rejected Promise with no <code>.catch()</code> handler used to silently disappear. Modern runtimes now emit warnings or crash the process, but the underlying issue — async errors that are easy to accidentally swallow — remains a source of hard-to-trace bugs.</li>
+    </ul>
+
+    <h2>Final Thoughts</h2>
+    <p>JavaScript's async architecture is not a workaround for a limitation. It is a coherent design — a single-threaded engine, a set of environment APIs that handle waiting off-thread, two queues with deliberate priority ordering, and an event loop that conducts the whole thing with a simple set of rules. Every async pattern in the language — callbacks, Promises, async/await, async iterators — is an expression of that same underlying model.</p>
+    <p>When you understand the machinery, the behavior stops being surprising. You know why a <code>Promise.resolve().then()</code> runs before a <code>setTimeout(fn, 0)</code>. You know why a long synchronous loop can freeze a UI. You know exactly what <code>await</code> actually suspends and what it doesn't. The model is consistent, predictable, and elegant — and developers who truly understand it write async code that is all three of those things too.</p>
+  `
+}
+
+  ,{
   id: "mongodb-aggregation-pipeline",
   title: "MongoDB Aggregation Pipeline: The Most Powerful Thing You're Probably Underusing",
   excerpt: "Find and findOne will only take you so far. When you need to group, transform, and analyze your data - the aggregation pipeline is where MongoDB gets serious.",

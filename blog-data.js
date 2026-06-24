@@ -7,7 +7,7 @@ const BLOG_POSTS = [
   id: "neural-networks-explained",
   title: "Neural Networks Explained: From a Single Neuron to a Thinking Machine",
   excerpt: "Neural networks power everything from your phone's face unlock to the AI writing code alongside you. Here's how they actually work — from the first neuron to the finished model.",
-  date: "2026-05-18",
+  date: "2026-06-24",
   time: "10:00 AM",
   tag: "AI & Machine Learning",
   tagColor: "var(--warm-yellow)",

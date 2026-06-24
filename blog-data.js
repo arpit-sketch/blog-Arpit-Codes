@@ -3,6 +3,82 @@
 // It will automatically appear on the listing page and landing page.
 
 const BLOG_POSTS = [
+  {
+  id: "neural-networks-explained",
+  title: "Neural Networks Explained: From a Single Neuron to a Thinking Machine",
+  excerpt: "Neural networks power everything from your phone's face unlock to the AI writing code alongside you. Here's how they actually work — from the first neuron to the finished model.",
+  date: "2026-05-18",
+  time: "10:00 AM",
+  tag: "AI & Machine Learning",
+  tagColor: "var(--warm-yellow)",
+  readTime: "8 min read",
+  content: `
+    <p>Picture a child learning to recognise dogs. Nobody hands them a rulebook — no "four legs, check; fur, check; tail, check." They just see enough dogs. A golden retriever, a poodle, a chihuahua. Over time, something in their brain adjusts. Patterns get reinforced. Wrong guesses get corrected. And eventually, they can identify a dog they've never seen before in a fraction of a second.</p>
+    <p>Neural networks work on exactly this principle. Not rule-based logic. Not hand-written conditionals. Just exposure, adjustment, and repetition — until the pattern is burned in. The architecture that makes this possible is one of the most elegant ideas in modern computing, and once you see how it's built, you'll never look at AI the same way again.</p>
+
+    <h2>Start With One Neuron</h2>
+    <p>Before there's a network, there's a single neuron. In the brain, a neuron receives signals from other neurons, weighs them up, and decides whether to fire. The artificial version does something strikingly similar.</p>
+    <p>A single artificial neuron takes in one or more numbers as input. It multiplies each input by a <strong>weight</strong> — a number representing how important that input is. It sums everything up, adds a <strong>bias</strong> — a baseline that shifts the result — and passes the total through an <strong>activation function</strong> that decides what the neuron actually outputs.</p>
+    <p>Visualise it like a dimmer switch. The inputs are the hands turning it. The weights decide how much each hand matters. The bias is the starting position of the switch. And the activation function decides whether the light turns on — and how brightly.</p>
+    <p>One neuron on its own is just a glorified linear equation. But stack thousands of them in layers, connect them to each other, and something remarkable emerges.</p>
+
+    <h2>The Network: Layers Working Together</h2>
+    <p>A neural network is neurons organised into three types of layers — and data flows through them in one direction, left to right, like an assembly line.</p>
+    <ul>
+      <li><strong>The input layer:</strong> The front door. Each neuron here holds one feature from your data — a pixel's brightness value, a word's numeric representation, a sensor reading. No computation happens here. It's pure intake.</li>
+      <li><strong>Hidden layers:</strong> The factory floor. These are where the actual learning happens. Each neuron takes inputs from the previous layer, applies its weights and bias, fires its activation function, and passes its output forward. A network can have one hidden layer or dozens. The deeper the network, the more abstract the patterns it can detect — early layers might recognise edges, middle layers shapes, later layers full objects.</li>
+      <li><strong>The output layer:</strong> The verdict. For a dog-vs-cat classifier, this might be two neurons — one for each class — whose values represent confidence scores. For a language model, it might be tens of thousands of neurons, one for each word in the vocabulary. The highest value wins.</li>
+    </ul>
+    <p>Picture light passing through a series of stained glass windows. Each window — each layer — filters, colours, and transforms what passes through it. What comes out the other side is shaped by every window in the sequence. That's a forward pass: raw data going in, prediction coming out.</p>
+
+    <h2>The Math That Makes It Learn: Backpropagation</h2>
+    <p>A network with random weights produces random predictions. Learning is the process of making those weights less random — pushing them, gradually, toward values that produce correct predictions. The mechanism that does this is called <strong>backpropagation</strong>, and it's the engine underneath every neural network that has ever learned anything.</p>
+    <p>Here's the flow. The network makes a prediction. You compare it to the correct answer and calculate the <strong>loss</strong> — a single number representing how wrong the prediction was. Then you work backwards through the network, layer by layer, calculating how much each weight contributed to that wrongness. This is the gradient — a direction and magnitude telling you which way to nudge each weight to reduce the loss.</p>
+    <p>Then <strong>gradient descent</strong> takes over. Every weight in the network gets nudged a small amount in the direction that reduces the loss. The size of that nudge is controlled by the <strong>learning rate</strong> — too large and the weights overshoot; too small and training takes forever. Do this thousands of times, across thousands of examples, and the weights converge toward values that make the network genuinely useful.</p>
+    <p>It's not magic. It's calculus applied iteratively at enormous scale — the chain rule, repeated across millions of parameters, millions of times.</p>
+
+    <h2>Activation Functions: The Neuron's Decision Maker</h2>
+    <p>Without activation functions, a neural network — no matter how many layers deep — is just a linear equation. Stacking linear transformations gives you another linear transformation. Activation functions introduce non-linearity, which is what allows networks to model complex, curved, real-world relationships.</p>
+    <ul>
+      <li><strong>ReLU (Rectified Linear Unit):</strong> The most widely used. Brutally simple — if the input is negative, output zero; otherwise output the input unchanged. Computationally cheap, and surprisingly effective. Most hidden layers in modern networks use ReLU or a variant of it.</li>
+      <li><strong>Sigmoid:</strong> Squashes any input into a value between 0 and 1. Used in output layers for binary classification — where the output represents a probability. Less common in hidden layers now due to the vanishing gradient problem.</li>
+      <li><strong>Softmax:</strong> The multi-class version of sigmoid. Takes a vector of raw scores and converts them into a probability distribution that sums to 1. The go-to for classification problems with more than two categories.</li>
+      <li><strong>Tanh:</strong> Similar to sigmoid but outputs between -1 and 1. Centred at zero, which can make training more stable in certain architectures.</li>
+    </ul>
+
+    <h2>Building One in Practice</h2>
+    <p>This is where it stops being theory. Modern frameworks — PyTorch and TensorFlow being the dominant two — abstract the gradient calculations, the backpropagation, and the weight updates behind clean APIs. What you actually write looks less like math and more like describing a structure:</p>
+    <pre><code>import torch.nn as nn
+
+class SimpleNet(nn.Module):
+  def __init__(self):
+    super().__init__()
+    self.layers = nn.Sequential(
+      nn.Linear(784, 128),  # input layer → hidden
+      nn.ReLU(),
+      nn.Linear(128, 64),   # hidden → hidden
+      nn.ReLU(),
+      nn.Linear(64, 10)     # hidden → output
+    )
+
+  def forward(self, x):
+    return self.layers(x)</code></pre>
+    <p>This is a network for classifying handwritten digits — 784 inputs (one per pixel in a 28×28 image), two hidden layers, 10 outputs (one per digit). The framework handles everything else: computing gradients, updating weights, tracking loss. Your job is to define the architecture, choose the loss function, pick an optimiser, and feed it data.</p>
+    <p>The training loop itself follows a rhythm so consistent it becomes muscle memory — forward pass, compute loss, backward pass, update weights, repeat. Thousands of times. The weights quietly converge. The loss quietly drops. And at some point, the network starts getting things right.</p>
+
+    <h2>Where Neural Networks Live Today</h2>
+    <p>The architecture described here — layers of neurons, backpropagation, gradient descent — is the foundation underneath almost every AI system you interact with. But the field has branched into specialised architectures built for specific kinds of data:</p>
+    <ul>
+      <li><strong>Convolutional Neural Networks (CNNs):</strong> Designed for images. Instead of connecting every neuron to every other, convolutional layers scan the image with small filters — detecting edges, textures, shapes — in a way that's both efficient and spatially aware.</li>
+      <li><strong>Recurrent Neural Networks (RNNs):</strong> Designed for sequences. Hidden state carries information forward through time, making them suitable for time series, audio, and early language models.</li>
+      <li><strong>Transformers:</strong> The architecture behind GPT, Claude, and every modern large language model. Attention mechanisms let the model weigh the relevance of every part of the input against every other part — capturing long-range dependencies that RNNs struggled with.</li>
+    </ul>
+
+    <h2>Final Thoughts</h2>
+    <p>A neural network is not a black box — it's a very deep stack of simple operations, each one comprehensible on its own, collectively capable of something that feels like understanding. A neuron multiplies, sums, and activates. A layer transforms. A network composed of layers learns. Backpropagation teaches it. Gradient descent steers it.</p>
+    <p>The child learning to recognise dogs didn't need to understand neuroscience to get there. But you — building systems that learn — benefit enormously from understanding the machinery. Because when your model doesn't converge, when the loss plateaus, when the predictions are confidently wrong, it's the fundamentals that tell you where to look.</p>
+  `
+},
 
   {
   id: "javascript-async-architecture",

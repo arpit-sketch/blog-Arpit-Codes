@@ -4,6 +4,58 @@
 
 const BLOG_POSTS = [
   {
+  id: "ml-technical-debt-hidden-cost",
+  title: "ML is a High-Interest Credit Card: The Hidden Cost of Machine Learning Systems",
+  excerpt: "Shipping a machine learning feature feels like a win. But underneath every model lives a system that quietly accumulates debt — in ways traditional software engineering never prepared you for.",
+  date: "2026-10-17",
+  time: "10:00 AM",
+  tag: "AI & Machine Learning",
+  tagColor: "var(--warm-yellow)",
+  readTime: "8 min read",
+  content: `
+    <p>There's a particular kind of confidence that comes with shipping your first machine learning feature. The model works. The accuracy looks good. The demo is clean. You merge the PR, close the ticket, and move on. What nobody tells you is that you may have just taken out a loan — one with compounding interest, no fixed repayment date, and penalties that show up months later in the form of systems that are impossible to debug, modify, or trust.</p>
+    <p>This is the central argument of a paper published by engineers at Google: that machine learning systems accumulate technical debt in ways that are qualitatively different from ordinary software — and far more expensive to pay off. The debt isn't in the model. It's in everything around it. The pipelines, the dependencies, the configurations, the feedback loops you didn't know existed. Here's what that actually looks like in practice — and what you can do about it.</p>
+
+    <h2>Changing Anything Changes Everything</h2>
+    <p>In traditional software, a well-isolated module can be changed without touching anything else. Interfaces are the contract. Stay within them and the rest of the system is safe. Machine learning breaks this guarantee in a fundamental way.</p>
+    <p>Every feature your model consumes is entangled with every other feature. Change the distribution of one input — add a new data source, fix a logging bug, remove a redundant column — and the weights the model assigned to every other input may silently shift. The model doesn't tell you this happened. The accuracy metrics might not catch it immediately. But the behavior has changed, somewhere, on some slice of your data, in a way you won't discover until something goes wrong in production.</p>
+    <p>The Google engineers gave this a name: the CACE principle. <em>Changing Anything Changes Everything.</em> It's not a bug in machine learning — it's the nature of how models work. But it means that the assumption most developers carry from traditional engineering — that careful, isolated changes are safe — doesn't hold here. Every change to an ML system is a system-wide change, whether it looks like one or not.</p>
+
+    <h2>The Feedback Loops You Can't See</h2>
+    <p>Some feedback loops are obvious. A recommendation model trained on clicks will naturally influence what gets clicked, which influences future training data. Every ML practitioner knows this and plans for it.</p>
+    <p>The dangerous ones are the hidden loops — the ones that form through indirect connections between systems that nobody designed to be related. Imagine a feature in your model that counts how many times a user clicked a certain category of content in the past week. You improve the model. Users get better recommendations. They click more. The feature value rises. The model — now retrained on the new data — adjusts its weights in response. The system's behavior drifts, slowly, over weeks, in a direction nobody explicitly chose and nobody is monitoring.</p>
+    <p>The practical lesson: before you ship any ML feature, draw out every system that touches your model's outputs. Not just the obvious consumers — the logs, the dashboards, the downstream pipelines. Hidden feedback loops form through the paths you don't think to map. Find them before they find you.</p>
+
+    <h2>Data Dependencies Are Worse Than Code Dependencies</h2>
+    <p>Every developer knows to be cautious about code dependencies. You track them, version them, audit them. But data dependencies in ML systems get none of this scrutiny — and they carry more risk.</p>
+    <ul>
+      <li><strong>Unstable dependencies:</strong> Your model consumes a signal produced by another team's system. That team improves their system — legitimately, correctly, with no malicious intent. Your model's input distribution silently shifts. Your model's behavior silently changes. Nobody filed a breaking change notice because nobody knew your model depended on that signal in that way.</li>
+      <li><strong>Underutilised features:</strong> A feature that was useful in version one of your model becomes redundant when newer, better features are added. But it stays in the model. The model assigns it some weight. Now your system is vulnerable to changes in a signal it doesn't actually need — and nobody knows to protect it.</li>
+      <li><strong>Correction cascades:</strong> You need a model for problem A. A model for a slightly different problem A' already exists, so you build a correction model on top of it instead of starting fresh. Then someone needs A'' and builds on top of your correction. You now have a chain of models where improving the base model can degrade every model above it. The independent development that seemed efficient at the start has become a deadlock.</li>
+    </ul>
+    <p>The mitigation is unglamorous but essential: audit your features regularly. Remove the ones that don't earn their place. Version your data signals. Treat data dependencies with the same seriousness you treat code dependencies — because in a production ML system, they are more dangerous.</p>
+
+    <h2>The System Around the Model</h2>
+    <p>Here's a number that tends to surprise people: in a mature, production ML system, the actual machine learning code — the model definition, the training loop, the inference logic — often accounts for no more than 5% of the total codebase. The other 95% is everything else. Data pipelines. Validation scripts. Feature engineering. Configuration files. Monitoring infrastructure. Glue code.</p>
+    <p>That glue code is where the real debt lives.</p>
+    <ul>
+      <li><strong>Glue code:</strong> When you pull in an off-the-shelf ML package and write mountains of supporting code to feed data into it and extract predictions out of it, you've created tight coupling to that package's quirks and assumptions. Switching approaches later — even for good reasons — means rewriting all that glue. The package that felt like a shortcut becomes a cage.</li>
+      <li><strong>Pipeline jungles:</strong> Data preparation pipelines that grow organically — one new signal added here, one join added there — eventually become systems that nobody fully understands. Errors are hard to detect. Failures are hard to recover from. Testing requires expensive end-to-end runs. The pipeline that started as a convenience becomes the most fragile part of your entire system.</li>
+      <li><strong>Dead experimental code paths:</strong> You tried an alternative algorithm six months ago. It didn't work. But instead of deleting it, you left it behind a feature flag. Then another experiment got added. Then another. Now your production code is full of conditional branches from experiments that were abandoned, interacting with each other in ways nobody mapped, carrying the risk of unexpected behavior at exactly the wrong moment. Knight Capital lost $465 million in 45 minutes partly because of unexpected behavior from obsolete experimental code that nobody had cleaned up.</li>
+      <li><strong>Configuration debt:</strong> In a large ML system, the configuration files — which features to use, how to sample data, what thresholds to apply — can dwarf the model code in sheer volume. Each line is a potential mistake. Each mistake can silently corrupt training, waste compute, or break production. Yet configuration is almost never treated with the same rigour as code: no mandatory reviews, no automated tests, no assertions about invariants.</li>
+    </ul>
+
+    <h2>The World Doesn't Hold Still</h2>
+    <p>One of the properties that makes ML systems genuinely powerful is that they learn from the real world. One of the properties that makes them genuinely difficult to maintain is the same thing: the real world changes.</p>
+    <p>A threshold you manually tuned against last year's data distribution may be silently wrong today. A correlation your model relied on — two features that always moved together — may have decoupled because of a product change, a seasonal shift, or an external event. The model keeps making predictions with the same confidence it always had. The predictions are quietly getting worse. And without live monitoring specifically designed to catch distributional shift, you won't know until a user complains or a metric collapses.</p>
+    <p>The practical response is to build monitoring that watches the right things. Track prediction bias — whether the distribution of your model's outputs matches the distribution of observed outcomes. Set action limits that trigger alerts when model behavior drifts outside expected ranges. Treat a sudden change in a monitoring metric not as noise but as a signal that something in the world your model learned from has changed.</p>
+
+    <h2>Final Thoughts</h2>
+    <p>None of this is an argument against machine learning. The paper that inspired this post was written by engineers who build ML systems at Google at enormous scale — they're not critics, they're practitioners. The argument is simply that machine learning debt is real, it compounds quietly, and it catches teams off guard because it doesn't look like the technical debt they learned to recognise in traditional software.</p>
+    <p>The model is 5% of the system. The other 95% — the pipelines, the dependencies, the configurations, the monitoring, the glue — is where the debt accumulates and where the maintenance burden lives. Ship thoughtfully. Audit relentlessly. Clean up what you don't need. And treat every data dependency with at least as much respect as you'd give a code dependency — because in a machine learning system, it deserves more.</p>
+  `
+},
+  {
   id: "neural-networks-explained",
   title: "Neural Networks Explained: From a Single Neuron to a Thinking Machine",
   excerpt: "Neural networks power everything from your phone's face unlock to the AI writing code alongside you. Here's how they actually work — from the first neuron to the finished model.",
